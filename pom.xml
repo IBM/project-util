@@ -1,21 +1,43 @@
-<project
-    xmlns="http://maven.apache.org/POM/4.0.0"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.ibm.cloud</groupId>
     <artifactId>project-util-plugin</artifactId>
-    <version>0.1.0-RELEASE</version>
+    <version>0.1.0-SNAPSHOT</version>
 
     <packaging>maven-plugin</packaging>
 
     <name>project-util Maven Plugin</name>
-    <url>https://github.com/IBM/project-util</url>
     <description>This is a maven plugin containing some general purpose utility functions.</description>
+    <url>https://github.com/IBM/project-util</url>
+
+    <licenses>
+        <license>
+            <name>The Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Richard Trotter</name>
+            <email>rtrotter@us.ibm.com</email>
+            <organization>IBM</organization>
+            <organizationUrl>http://www.ibm.com</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <url>https://github.com/IBM/project-util/tree/master</url>
+        <connection>scm:git:git@github.com:IBM/project-util.git</connection>
+        <developerConnection>scm:git:git@github.com:IBM/project-util.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.8</java.version>
         <maven.version>3.6.3</maven.version>
     </properties>
 
@@ -65,6 +87,14 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>${project.basedir}</directory>
+                <includes>
+                    <include>LICENSE*</include>
+                </includes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -85,10 +115,58 @@
                         <goals>
                             <goal>helpmojo</goal>
                         </goals>
-                        <configuration></configuration>
+                        <configuration />
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>sonatype-nexus-staging</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
+    <profiles>
+        <profile>
+            <id>publishing</id>
+            <properties>
+                <version.maven-release-plugin>2.5.3</version.maven-release-plugin>
+                <version.maven-gpg-plugin>1.6</version.maven-gpg-plugin>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <version>${version.maven-release-plugin}</version>
+                        <configuration>
+                            <tagNameFormat>v@{project.version}-RELEASE</tagNameFormat>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${version.maven-gpg-plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>sign-artifacts</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
 </project>
