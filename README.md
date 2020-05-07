@@ -14,6 +14,21 @@ Example:
 
 This goal can be used as one of a list of Maven goals to be executed for a "build", and will cause the build to fail if the specified `version` does not match the `range_spec`. 
 
+### GOAL: CHECK_PARENT_POM
+
+This is a goal that can be used to verify consistency between a POM and its required parent POM.  Specificlally:
+
+1. Ensure the parent POM file is installed in the local Maven repository
+2. Verify a parent POM reference exists and that its identifiers match the required parent POM
+
+Example:
+``` bash
+% mvn com.ibm.cloud:project-util-plugin:check-parent-pom \
+    -Dparent_path=testcase-parent-pom.xml \
+    -Dchild_path=testcase-pom.xml \
+    -Drepo_path=/mvn/repository
+```
+
 ### HELP
 
 The plugin uses the [Maven Plugin Plugin](http://maven.apache.org/plugin-tools/maven-plugin-plugin/index.html) builtin [HelpMojo](http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/generate-help.html) for generated plugin help.
