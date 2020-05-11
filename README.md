@@ -22,11 +22,42 @@ This is a goal that can be used to verify consistency between a POM and its requ
 2. Verify a parent POM reference exists and that its identifiers match the required parent POM
 
 Example:
+
 ``` bash
 % mvn com.ibm.cloud:project-util-plugin:check-parent-pom \
     -Dparent_path=testcase-parent-pom.xml \
     -Dchild_path=testcase-pom.xml \
     -Drepo_path=/mvn/repository
+```
+
+### GOAL: VERIFY_FILE
+
+This is a goal that supports enforcement of read-only policies on local files, using MD5 digests as cksums to detect changes relative to expectation. 
+
+Parameters:  
+* `file_path` A path on the local filesystem for the file to verify  
+* `cksum_url` A URL for a file containing the MD5 digest for the file to verify  
+* `ref_url` A URL for the reference copy of the file to verify (optional)  
+* `replace_on_fail` Replace the local file with the reference copy if the cksum match fails. (optional, default=false)  
+
+URL parameters accept either 'file' or 'http(s)' scheme. If <code>ref_url</code> is specified and <code>replace_on_fail</code> is false, then save a copy of the reference file and fail.
+
+Example:  
+
+``` bash
+ % mvn com.ibm.cloud:project-util-plugin:verify-file \
+     -Dfile_path=parent-pom.xml \
+     -Dcksum_url=file:///tmp/parent-pom-cksum.txt
+```
+
+### GOAL: GENERATE_CKSUM
+
+Generate an MD5 checksum for a specified file.
+
+Example:
+
+``` bash
+% s=`mvn -q com.ibm.cloud:project-util-plugin:gen-cksum -Dfile_path=a.xml`
 ```
 
 ### HELP

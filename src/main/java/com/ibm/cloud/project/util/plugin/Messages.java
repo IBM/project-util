@@ -30,7 +30,9 @@ public class Messages {
   protected static final String FOUND_PARENT_POM_COORDINATE = "found_parent_pom_coordinate";
   protected static final String FOUND_PARENT_POM = "found_parent_pom";
   protected static final String INSTALLING_PARENT_POM = "installing_parent_pom"; 
-  protected static final String VERIFIED_PARENT_POM_REF = "verified_parent_pom_ref"; 
+  protected static final String VERIFIED_PARENT_POM_REF = "verified_parent_pom_ref";
+  protected static final String CKSUM_MISMATCH = "cksum_mismatch";
+  protected static final String REPLACED_PROTECTED_FILE = "replaced_protected_file";
   
   protected static String get(String key) {
     return resourceBundle.getString(key);

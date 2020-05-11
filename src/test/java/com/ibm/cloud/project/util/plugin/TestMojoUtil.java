@@ -14,10 +14,18 @@
  */    
 package com.ibm.cloud.project.util.plugin;
 
+import static com.ibm.cloud.project.util.plugin.MojoUtil.getMD5Digest;
 import static com.ibm.cloud.project.util.plugin.MojoUtil.getParentPomCoordinate;
 import static com.ibm.cloud.project.util.plugin.MojoUtil.getPomCoordinate;
+import static com.ibm.cloud.project.util.plugin.MojoUtil.verifyFileIntegrity;
+import static com.ibm.cloud.project.util.plugin.MojoUtil.downloadText;
+import static com.ibm.cloud.project.util.plugin.MojoUtil.replaceFile;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
+
+import java.io.File;
+import java.net.URL;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.shared.transfer.artifact.ArtifactCoordinate;
@@ -28,6 +36,10 @@ public class TestMojoUtil {
 
   static String parentPomPath = "src/test/resources/testcase-parent-pom.xml";
   static String pomPath = "src/test/resources/testcase-pom.xml";
+  static String parentPomChecksum = "64666CCB597DE6BA71A7EF7437402F33";
+  static String parentPomChecksumPath = "src/test/resources/testcase-parent-pom-cksum.txt";
+  static String scmBase = "https://raw.githubusercontent.com/IBM/project-util/master/";
+
 
   @Test
   public void testGetPomCoordinate() {
@@ -56,5 +68,66 @@ public class TestMojoUtil {
     }
   
   }
+  
+  @Test
+  public void testGetMD5Digest() {
+    
+    try {
+      String digest = getMD5Digest(new File(parentPomPath));
+      assertEquals("Wrong parent pom checksum", parentPomChecksum, digest);
+    }
+    catch (Exception e) {
+      fail(e.toString());
+    }
+  }
 
+  
+  @Test
+  public void testVerifyFile() {
+
+    String cksumURL = String.format("file://%s/%s", System.getProperty("user.dir"), parentPomChecksumPath);
+
+    try {
+      assertTrue("Checksum match failed", verifyFileIntegrity(new File(parentPomPath), new URL(cksumURL)));
+    }
+    catch (Exception e) {
+      fail(e.toString());
+    }
+
+  }
+  
+  @Test
+  public void testDownloadText() {
+    
+    String sourceURL = scmBase + parentPomPath;
+    
+    try {
+      assertTrue("File download failed", downloadText(new URL(sourceURL)).length() > 0);
+    }
+    catch (Exception e) {
+      fail(e.toString());
+    }
+
+  }
+  
+  @Test
+  public void testReplaceFile() {
+
+    String sourceURL = scmBase + parentPomPath;
+
+    try {
+      File subjectFile = File.createTempFile("test", ".xml");
+      try {
+        replaceFile(new URL(sourceURL), subjectFile);
+        assertTrue("Replace file failed", subjectFile.exists() && subjectFile.length() > 0 );
+      }
+      finally {
+        subjectFile.delete();
+      }
+    }
+    catch (Exception e) {
+      fail(e.toString());
+    }
+    
+  }
 }

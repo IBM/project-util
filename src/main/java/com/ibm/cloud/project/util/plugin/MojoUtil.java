@@ -15,11 +15,19 @@
 package com.ibm.cloud.project.util.plugin;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.URL;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.text.MessageFormat;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
@@ -106,7 +114,59 @@ public class MojoUtil {
   
     return coordinate;
   }
+  
+  protected static String getMD5Digest(File file) throws IOException, NoSuchAlgorithmException {
 
+    int bufflen = 8192;
+    
+    MessageDigest digest = MessageDigest.getInstance("MD5");     
+
+    try( FileInputStream inputStream = new FileInputStream(file) ) {
+      byte[] buff = new byte[bufflen];
+      int bytesRead = 0; 
+      while ((bytesRead = inputStream.read(buff)) != -1)
+        digest.update(buff, 0, bytesRead);      
+    }
+          
+    return DatatypeConverter.printHexBinary(digest.digest());
+  }
+  
+  protected static boolean verifyFileIntegrity(File file, URL cksumURL) throws NoSuchAlgorithmException, IOException {
+
+      String localDigest = getMD5Digest(file);
+      String sourceDigest = downloadText(cksumURL);
+
+      return localDigest.equals(sourceDigest);
+  }
+  
+  protected static void replaceFile(URL sourceURL, File file ) throws IOException {
+    
+    String replacementText = downloadText(sourceURL);
+    
+    try( OutputStream outputStream = new FileOutputStream(file) ) {
+      outputStream.write(replacementText.getBytes());
+    }
+  }
+
+  protected static String downloadText(URL sourceURL) throws IOException {
+    
+    int buflen = 4096;
+    
+    StringBuilder stringBuilder = new StringBuilder(buflen);
+    
+    byte[] buff = new byte[buflen];
+    try( InputStream inputStream = sourceURL.openStream() ) {
+      int n = inputStream.read(buff); 
+      do {
+        String s = new String(buff, 0, n);
+        stringBuilder.append(s);
+      }
+      while ( (n = inputStream.read(buff)) > 0 );
+    }
+    
+    return stringBuilder.toString();
+  }
+  
   static private Map<String,String> getPomElementText(String pomPath, String[] elements) throws MojoExecutionException {
   
     if( ! verifyFileExists(pomPath) )
