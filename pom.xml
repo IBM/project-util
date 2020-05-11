@@ -19,7 +19,7 @@
 
     <groupId>com.ibm.cloud</groupId>
     <artifactId>project-util-plugin</artifactId>
-    <version>0.3.0-SNAPSHOT</version>
+    <version>0.3.0</version>
 
     <packaging>maven-plugin</packaging>
 
@@ -47,7 +47,7 @@
         <url>https://github.com/IBM/project-util/tree/master</url>
         <connection>scm:git:git@github.com:IBM/project-util.git</connection>
         <developerConnection>scm:git:git@github.com:IBM/project-util.git</developerConnection>
-        <tag>HEAD</tag>
+        <tag>v0.3.0-RELEASE</tag>
     </scm>
 
     <properties>
