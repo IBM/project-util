@@ -31,12 +31,13 @@ import org.apache.maven.plugins.annotations.Parameter;
  * <p>Verify local file using url for true reference file
  * 
  * <p>Accepts URLs with 'file' or 'http(s)' scheme. If <code>ref_url</code> is specified and <code>replace_on_fail</code> is false, then save a copy of the reference file and fail.
- * (URL scheme may be `file`)
- * 
- * @param file_path A path on the local filesystem for the file to verify
- * @param cksum_url A URL for a file containing the MD5 digest for the file to verify
- * @param ref_url A URL for the reference copy of the file to verify (optional)
- * @param replace_on_fail Replace the local file with the reference copy if the cksum match fails. (optional, default=false)
+ * <p>Parameters:
+ * <ul>
+ * <li><b>file_path</b> A path on the local filesystem for the file to verify
+ * <li><b>cksum_url</b> A URL for a file containing the MD5 digest for the file to verify
+ * <li><b>ref_url</b> A URL for the reference copy of the file to verify (optional)
+ * <li><b>replace_on_fail</b> Replace the local file with the reference copy if the cksum match fails. (optional, default=false)
+ * </ul>
  */
 @Mojo(name = "verify-file", requiresProject = false)
 public class VerifyFileIntegrityMojo extends AbstractMojo {

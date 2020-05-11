@@ -26,7 +26,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 /**
  * <p>Generate an MD5 checksum for a specified file.</p>
  * <p>Example:
- * <br><code>s=`mvn -q com.ibm.cloud:project-util-plugin:gen-cksum -Dfile_path=a.xml`</p>
+ * <br><code>s=`mvn -q com.ibm.cloud:project-util-plugin:gen-cksum -Dfile_path=a.xml`</code></p>
  */
 @Mojo(name = "gen-cksum", requiresProject = false)
 public class GenerateChecksumMojo extends AbstractMojo {
